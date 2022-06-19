@@ -1,0 +1,60 @@
+// Nathan Lee
+// TA: Yafqa Khan
+// The AnagramSolver class determines 
+// all anagram phrases of a given word.
+
+import java.util.*;
+
+public class AnagramSolver {
+
+    private List<String> dictionary;
+    private Map<String, LetterInventory> letterDictionary;
+
+    //Post: Constructs a AnagramSolver that will use the gievn list as its dictionary while
+    //      assuming that the dictionary is a non-empty collection of non-empty sequences of
+    //      letters and that it contains no duplicates.
+    public AnagramSolver(List<String> dictionary) {
+        letterDictionary = new HashMap<String, LetterInventory>();
+        for (String words : dictionary) {
+            letterDictionary.put(words, new LetterInventory(words));
+        }
+        this.dictionary = dictionary;
+    }
+
+    //Pre:  If max is less than 0 then throw an IllegalArgumentException.
+    //Post: Find combinations of words that have the same letters as the given string. Print
+    //      all combinations of words from the dictionary that are anagrams of the text and
+    //      the includes at most max words.
+    public void print(String text, int max) {
+        if (max < 0) {
+            throw new IllegalArgumentException();
+        }
+        LetterInventory newText = new LetterInventory(text);
+        Stack<String> stack = new Stack<String>();
+        for (String word : dictionary) {
+            LetterInventory letter = letterDictionary.get(word);
+            if (newText.subtract(letter) != null) {
+                stack.add(word);
+            }
+        }
+        List<String> newList = new ArrayList<String>();
+        printWords(newText, newList, stack, max);
+    }
+
+    //Post: Prints out word combinations.
+    private void printWords(LetterInventory letterInventory, List<String> newList, Stack<String> words, int max) {
+        if (letterInventory.isEmpty()) {
+            System.out.println(newList);
+        } else if (newList.size() < max || max == 0) {
+            for (String phrase : words) {
+                LetterInventory update = letterInventory.subtract(letterDictionary.get(phrase));
+                if (update != null) {
+                    //int index = words.size() - 1;
+                    newList.add(phrase);
+                    printWords(update, newList, words, max);
+                    newList.remove(newList.size() - 1);
+                }
+            }
+        }
+    }
+}
