@@ -1,2 +1,2 @@
 # CSE143
-Java projects completed during CSE 143 at UW
+This repository contains the projects completed during UW's CSE 143 class on data abstraction and encapsulation.
